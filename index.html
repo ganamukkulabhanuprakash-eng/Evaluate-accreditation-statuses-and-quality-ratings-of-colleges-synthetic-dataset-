@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evaluate Accreditation Statuses and Quality Ratings of Colleges Across India (Using Synthetic Data — Not Official Data) | EDAV Project</title>
+  <meta name="description" content="Exploratory Data Analysis and Visualization (EDAV) of institutional accreditation statuses and quality ratings across colleges in India (Using Synthetic Data — Not Official Data).">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- KaTeX Math Equation Typesetting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body class="dark-theme">
+
+  <!-- TOP SYNTHETIC DATA NOTICE BANNER -->
+  <aside class="top-disclaimer-banner" role="alert" aria-label="Dataset Disclaimer">
+    <div class="banner-inner container">
+      <span class="banner-icon" aria-hidden="true">⚠️</span>
+      <p class="banner-text">
+        <strong>Synthetic / AI-generated dataset — for academic demonstration only. Not official accreditation data.</strong>
+      </p>
+      <a href="#disclaimer" class="banner-link">Read Full Disclaimer ↓</a>
+    </div>
+  </aside>
+
+  <!-- STICKY HEADER & NAVBAR -->
+  <header class="site-header" id="header">
+    <div class="container header-container">
+      <a href="#" class="brand-logo" aria-label="EDAV Project Home">
+        <div class="brand-symbol" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">College Accreditation & Quality Analysis</span>
+          <span class="brand-subtitle">(Using Synthetic Data — Not Official Data)</span>
+        </div>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Main Navigation">
+        <ul class="nav-list">
+          <li><a href="#overview" class="nav-link">Overview</a></li>
+          <li><a href="#disclaimer" class="nav-link">Disclaimer</a></li>
+          <li><a href="#stats" class="nav-link">Key Stats</a></li>
+          <li><a href="#questions" class="nav-link">Five Questions</a></li>
+          <li><a href="#visualizations" class="nav-link">Visualizations</a></li>
+          <li><a href="#methodology" class="nav-link">Methodology</a></li>
+          <li><a href="#findings" class="nav-link">Findings</a></li>
+          <li><a href="#resources" class="nav-link">Resources</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <!-- Theme Toggle Button -->
+        <button id="themeToggle" class="icon-btn" title="Toggle Theme" aria-label="Toggle between dark and light theme">
+          <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <!-- Colab CTA Header -->
+        <a href="https://colab.research.google.com/drive/1RPYyL-o5527WvpNsAxxu_zB49jQm65TN?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline header-colab-btn">
+          <span>Colab</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
+
+        <!-- Mobile Menu Toggle -->
+        <button id="mobileMenuBtn" class="icon-btn mobile-menu-btn" aria-label="Toggle mobile menu" aria-expanded="false">
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileNav" class="mobile-nav-drawer" aria-hidden="true">
+      <ul class="mobile-nav-list">
+        <li><a href="#overview" class="mobile-nav-link">Overview</a></li>
+        <li><a href="#disclaimer" class="mobile-nav-link">Disclaimer</a></li>
+        <li><a href="#stats" class="mobile-nav-link">Key Stats</a></li>
+        <li><a href="#questions" class="mobile-nav-link">Five Questions</a></li>
+        <li><a href="#visualizations" class="mobile-nav-link">Visualizations</a></li>
+        <li><a href="#methodology" class="mobile-nav-link">Methodology</a></li>
+        <li><a href="#findings" class="mobile-nav-link">Findings</a></li>
+        <li><a href="#resources" class="mobile-nav-link">Resources</a></li>
+        <li class="mobile-action-item">
+          <a href="https://colab.research.google.com/drive/1RPYyL-o5527WvpNsAxxu_zB49jQm65TN?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-block">
+            <span>Open in Google Colab ↗</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero-section" id="hero">
+      <div class="hero-bg-grid" aria-hidden="true"></div>
+      <div class="hero-glow hero-glow-1" aria-hidden="true"></div>
+      <div class="hero-glow hero-glow-2" aria-hidden="true"></div>
+
+      <div class="container hero-container">
+        <div class="hero-content">
+          <!-- SMALL VISIBLE SYNTHETIC DATA DISCLAIMER BADGE -->
+          <div class="hero-synthetic-disclaimer animate-fade-in" role="note">
+            <span class="synthetic-badge-icon" aria-hidden="true">⚠️</span>
+            <span class="synthetic-badge-text">Synthetic / AI-generated dataset — for academic demonstration only. Not official accreditation data.</span>
+          </div>
+
+          <div class="hero-badge animate-fade-in delay-1">
+            <span class="badge-dot"></span>
+            <span>Exploratory Data Analysis & Visualization (EDAV) Project</span>
+          </div>
+
+          <h1 class="hero-title animate-fade-in delay-1">
+            College Accreditation & <span class="gradient-text">Quality Analysis</span>
+          </h1>
+
+          <div class="hero-full-title animate-fade-in delay-2">
+            <span class="full-title-label">Official Project Title:</span>
+            <h2 class="full-title-text">Evaluate Accreditation Statuses and Quality Ratings of Colleges Across India <span class="title-clarification">(Using Synthetic Data — Not Official Data)</span></h2>
+          </div>
+
+          <p class="hero-subtitle animate-fade-in delay-2">
+            An academic Exploratory Data Analysis project analyzing accreditation statuses, categorical quality grades, and numerical rating distributions across <strong>7,000 synthetic college records</strong> in India.
+          </p>
+
+          <!-- Floating Data Pill Highlights -->
+          <div class="hero-pills animate-fade-in delay-3">
+            <div class="pill-item">
+              <span class="pill-dot blue"></span>
+              <span class="pill-label">Dataset:</span>
+              <span class="pill-value">7,000 Institutions</span>
+            </div>
+            <div class="pill-item">
+              <span class="pill-dot emerald"></span>
+              <span class="pill-label">Accredited:</span>
+              <span class="pill-value">67.06%</span>
+            </div>
+            <div class="pill-item">
+              <span class="pill-dot purple"></span>
+              <span class="pill-label">Geography:</span>
+              <span class="pill-value">36 States / UTs</span>
+            </div>
+            <div class="pill-item">
+              <span class="pill-dot amber"></span>
+              <span class="pill-label">Imputation:</span>
+              <span class="pill-value">2-Stage Group Median</span>
+            </div>
+          </div>
+
+          <!-- Hero Action CTAs -->
+          <div class="hero-cta-group animate-fade-in delay-4">
+            <a href="#questions" class="btn btn-primary btn-lg">
+              <span>Explore Analysis</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+              </svg>
+            </a>
+
+            <a href="https://colab.research.google.com/drive/1RPYyL-o5527WvpNsAxxu_zB49jQm65TN?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-lg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="colab-icon">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+              </svg>
+              <span>Open Project in Google Colab ↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero Decorative Card Graphic -->
+        <div class="hero-visual animate-fade-in delay-3" aria-hidden="true">
+          <div class="hero-visual-card">
+            <div class="terminal-bar">
+              <span class="t-dot red"></span>
+              <span class="t-dot yellow"></span>
+              <span class="t-dot green"></span>
+              <span class="t-title">EDAV_Analysis.ipynb — Python 3.13</span>
+            </div>
+            <div class="terminal-body">
+              <p class="code-line"><span class="c-kw">import</span> pandas <span class="c-kw">as</span> pd</p>
+              <p class="code-line"><span class="c-kw">import</span> seaborn <span class="c-kw">as</span> sns</p>
+              <p class="code-line"><span class="c-var">df</span> = pd.read_csv(<span class="c-str">"college_accreditation_synthetic.csv"</span>)</p>
+              <p class="code-line"><span class="c-comment"># N = 7000 rows | 9 columns | 36 States</span></p>
+              <div class="terminal-output-preview">
+                <div class="t-metric">
+                  <div class="t-metric-label">Accredited Share</div>
+                  <div class="t-metric-val emerald-text">67.06%</div>
+                  <div class="t-metric-sub">4,694 of 7,000</div>
+                </div>
+                <div class="t-metric">
+                  <div class="t-metric-label">Missing Ratings</div>
+                  <div class="t-metric-val amber-text">866 → 0</div>
+                  <div class="t-metric-sub">12.37% Imputed</div>
+                </div>
+                <div class="t-metric">
+                  <div class="t-metric-label">(State, Grade)</div>
+                  <div class="t-metric-val cyan-text">263 Groups</div>
+                  <div class="t-metric-sub">Cross-tabulation</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: PROJECT OVERVIEW -->
+    <section class="section" id="overview">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Context & Framework</span>
+          <h2 class="section-title">Project Overview</h2>
+          <p class="section-lead">
+            A systematic Exploratory Data Analysis & Visualization investigation on structured tabular data, turning raw observations into interpretable summaries without speculative modeling.
+          </p>
+        </div>
+
+        <!-- 4 Core Overview Cards -->
+        <div class="overview-grid">
+          <div class="overview-card">
+            <div class="card-icon blue-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+            <h3 class="card-title">Project</h3>
+            <div class="card-tag">Academic Scope</div>
+            <p class="card-desc">
+              Exploratory Data Analysis and Visualization (EDAV) project following Bloom’s Taxonomy levels (BL-3 to BL-5). The notebook systematically answers five assigned professor questions.
+            </p>
+            <ul class="card-list">
+              <li>Systematic data inspection & profiling</li>
+              <li>Missing data diagnosis & treatment</li>
+              <li>Categorical grouping & aggregation</li>
+            </ul>
+          </div>
+
+          <div class="overview-card">
+            <div class="card-icon emerald-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+              </svg>
+            </div>
+            <h3 class="card-title">Dataset</h3>
+            <div class="card-tag">college_accreditation_synthetic.csv</div>
+            <p class="card-desc">
+              A tabular synthetic dataset consisting of <strong>7,000 distinct college records</strong> across <strong>9 attributes</strong>, with an in-memory footprint of ~492.3 KB.
+            </p>
+            <ul class="card-list">
+              <li><strong>Rows:</strong> 7,000 unique institutions (`College_ID`)</li>
+              <li><strong>Columns:</strong> 9 attributes (6 text, 3 float)</li>
+              <li><strong>Duplicates:</strong> Exactly 0 duplicate rows</li>
+            </ul>
+          </div>
+
+          <div class="overview-card">
+            <div class="card-icon purple-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+            </div>
+            <h3 class="card-title">Environment</h3>
+            <div class="card-tag">Python & Data Stack</div>
+            <p class="card-desc">
+              Developed and executed inside Google Colab & Jupyter Notebook environment using the core Python scientific computing stack without extraneous overhead.
+            </p>
+            <ul class="card-list">
+              <li><strong>pandas:</strong> Data structures & manipulation</li>
+              <li><strong>NumPy:</strong> Numerical array computations</li>
+              <li><strong>matplotlib & seaborn:</strong> Statistical visualization</li>
+            </ul>
+          </div>
+
+          <div class="overview-card">
+            <div class="card-icon cyan-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+              </svg>
+            </div>
+            <h3 class="card-title">Focus</h3>
+            <div class="card-tag">Analytical Core</div>
+            <p class="card-desc">
+              Evaluating accreditation labels, handling 12.37% missing ratings via structured two-stage group medians, and mapping institutional patterns across Indian states.
+            </p>
+            <ul class="card-list">
+              <li>Accreditation status proportion (67.06%)</li>
+              <li>Boolean conditional filtering by region</li>
+              <li>State × Grade frequency matrices (263 groups)</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Dataset Schema Information Card -->
+        <div class="schema-container">
+          <div class="schema-header">
+            <div>
+              <h3 class="schema-title">Dataset Structure & Field Catalog</h3>
+              <p class="schema-subtitle">Verified column specifications from <code>df.info()</code> and <code>df.describe()</code></p>
+            </div>
+            <span class="badge badge-secondary">9 Columns • 7,000 Rows</span>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Field Name</th>
+                  <th>Type</th>
+                  <th>Non-Null</th>
+                  <th>Missing</th>
+                  <th>Description & Observed Range</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>College_ID</code></td>
+                  <td><span class="dtype-pill">str</span></td>
+                  <td>7,000</td>
+                  <td>0 (0.00%)</td>
+                  <td>Unique alphanumeric institution ID (COL00001 to COL07000). Exactly 7,000 distinct keys.</td>
+                </tr>
+                <tr>
+                  <td><code>College_Name</code></td>
+                  <td><span class="dtype-pill">str</span></td>
+                  <td>7,000</td>
+                  <td>0 (0.00%)</td>
+                  <td>Institutional title (6,913 unique names; minimal recurrence across distinct IDs).</td>
+                </tr>
+                <tr>
+                  <td><code>State</code></td>
+                  <td><span class="dtype-pill">str</span></td>
+                  <td>6,825</td>
+                  <td>175 (2.50%)</td>
+                  <td>Indian State / Union Territory name. 36 distinct observed entities; top: Maharashtra (660).</td>
+                </tr>
+                <tr>
+                  <td><code>Region</code></td>
+                  <td><span class="dtype-pill">str</span></td>
+                  <td>6,824</td>
+                  <td>176 (2.51%)</td>
+                  <td>Geographic cluster (South: 2346, North: 1794, West: 1071, East: 857, Central: 475, Northeast: 281).</td>
+                </tr>
+                <tr>
+                  <td><code>Accreditation_Status</code></td>
+                  <td><span class="dtype-pill">str</span></td>
+                  <td>7,000</td>
+                  <td>0 (0.00%)</td>
+                  <td>Categorical status label: Accredited (4,694), Not Accredited (1,566), Under Review (740). Complete.</td>
+                </tr>
+                <tr>
+                  <td><code>Accreditation_Rating</code></td>
+                  <td><span class="dtype-pill">float64</span></td>
+                  <td>6,134</td>
+                  <td>866 (12.37%)</td>
+                  <td>Continuous quality score. Observed min 0.53, max 4.00, mean 2.6351, median 2.8500. Focus of Q3.</td>
+                </tr>
+                <tr>
+                  <td><code>Accreditation_Grade</code></td>
+                  <td><span class="dtype-pill">str</span></td>
+                  <td>6,392</td>
+                  <td>608 (8.69%)</td>
+                  <td>Categorical rating grade: 8 values (A++, A+, A, B++, B+, B, C, D). Mode: A (1,071).</td>
+                </tr>
+                <tr>
+                  <td><code>Accreditation_Year</code></td>
+                  <td><span class="dtype-pill">float64</span></td>
+                  <td>6,715</td>
+                  <td>285 (4.07%)</td>
+                  <td>Year of assessment (2018.0 to 2026.0, mean: 2021.60).</td>
+                </tr>
+                <tr>
+                  <td><code>Valid_Upto</code></td>
+                  <td><span class="dtype-pill">float64</span></td>
+                  <td>6,714</td>
+                  <td>286 (4.09%)</td>
+                  <td>Certification validity year (2023.0 to 2032.0, mean: 2026.61).</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: DEDICATED FULL DATA DISCLAIMER -->
+    <section class="section section-alt" id="disclaimer">
+      <div class="container">
+        <div class="disclaimer-card">
+          <div class="disclaimer-badge">
+            <span class="disclaimer-badge-icon">⚠️</span>
+            <span>Important Data Integrity Notice</span>
+          </div>
+          <h2 class="disclaimer-title">Synthetic Dataset Notice</h2>
+          <div class="disclaimer-body">
+            <blockquote class="disclaimer-quote">
+              The dataset used in this project is a synthetically generated, AI-created dataset prepared for academic demonstration purposes. It does not represent verified or official accreditation data and should not be interpreted as real-world statistics.
+            </blockquote>
+            <p>
+              All empirical statistics, calculations, proportions, frequency matrices, and visualizations presented across this website and in the accompanying Python notebook are derived directly from this synthetic dataset (<code>college_accreditation_synthetic.csv</code>).
+            </p>
+            <p>
+              This dataset is not sourced from the National Assessment and Accreditation Council (NAAC), the University Grants Commission (UGC), the Ministry of Education, or the Government of India open data repository (Data.gov.in). Consequently, no figures or patterns shown here should be mistaken for official institutional assessments or real-world policy findings.
+            </p>
+            <div class="disclaimer-callouts">
+              <div class="d-callout">
+                <strong>Methodological Focus:</strong> The sole purpose of this project is demonstrating standard Exploratory Data Analysis & Visualization practices: data loading, quality auditing, group-wise median imputation, conditional boolean filtering, cross-tabulation, and statistical plotting.
+              </div>
+              <div class="d-callout">
+                <strong>Derived Quantities:</strong> All reported metrics (e.g., 67.06% accreditation rate, 263 observed state–grade groups, state-level frequency distributions) describe solely the records inside this synthetic demonstration CSV.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: INTERACTIVE KEY STATISTICS -->
+    <section class="section" id="stats">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Empirical Metrics</span>
+          <h2 class="section-title">Interactive Key Statistics</h2>
+          <p class="section-lead">
+            Every metric below is directly computed from <code>college_accreditation_synthetic.csv</code> and verified in the project notebook.
+          </p>
+        </div>
+
+        <div class="stats-grid">
+          <!-- Stat 1: Total Colleges -->
+          <div class="stat-card" data-stat="7000">
+            <div class="stat-header">
+              <span class="stat-indicator blue"></span>
+              <span class="stat-context">Sample Size</span>
+            </div>
+            <div class="stat-value-wrap">
+              <span class="stat-number count-up" data-target="7000">0</span>
+            </div>
+            <h3 class="stat-label">Total Colleges in Table</h3>
+            <p class="stat-detail">Complete row count ($N = 7000$). Each row represents a unique institutional record.</p>
+            <div class="stat-footer-badge">College_ID: 100% Unique</div>
+          </div>
+
+          <!-- Stat 2: Accredited Rate -->
+          <div class="stat-card" data-stat="67.06">
+            <div class="stat-header">
+              <span class="stat-indicator emerald"></span>
+              <span class="stat-context">Accredited Share (Q1)</span>
+            </div>
+            <div class="stat-value-wrap">
+              <span class="stat-number count-up" data-target="67.06" data-decimals="2">0</span>
+              <span class="stat-unit">%</span>
+            </div>
+            <h3 class="stat-label">Accreditation Rate</h3>
+            <p class="stat-detail">4,694 of 7,000 institutions are marked <em>Accredited</em> in <code>Accreditation_Status</code>.</p>
+            <div class="stat-footer-badge emerald-badge">4,694 Colleges (Numerator)</div>
+          </div>
+
+          <!-- Stat 3: Not Accredited -->
+          <div class="stat-card" data-stat="22.37">
+            <div class="stat-header">
+              <span class="stat-indicator amber"></span>
+              <span class="stat-context">Non-Accredited (Q1)</span>
+            </div>
+            <div class="stat-value-wrap">
+              <span class="stat-number count-up" data-target="22.37" data-decimals="2">0</span>
+              <span class="stat-unit">%</span>
+            </div>
+            <h3 class="stat-label">Not Accredited Ratio</h3>
+            <p class="stat-detail">1,566 colleges marked <em>Not Accredited</em>. Status category is complete with zero nulls.</p>
+            <div class="stat-footer-badge">1,566 Colleges</div>
+          </div>
+
+          <!-- Stat 4: Under Review -->
+          <div class="stat-card" data-stat="10.57">
+            <div class="stat-header">
+              <span class="stat-indicator purple"></span>
+              <span class="stat-context">Pending Review (Q1)</span>
+            </div>
+            <div class="stat-value-wrap">
+              <span class="stat-number count-up" data-target="10.57" data-decimals="2">0</span>
+              <span class="stat-unit">%</span>
+            </div>
+            <h3 class="stat-label">Under Review Ratio</h3>
+            <p class="stat-detail">740 institutions under review, completing the 100.00% partition across 7,000 entries.</p>
+            <div class="stat-footer-badge">740 Colleges</div>
+          </div>
+
+          <!-- Stat 5: States & UTs -->
+          <div class="stat-card" data-stat="36">
+            <div class="stat-header">
+              <span class="stat-indicator cyan"></span>
+              <span class="stat-context">Geographic Entities</span>
+            </div>
+            <div class="stat-value-wrap">
+              <span class="stat-number count-up" data-target="36">0</span>
+            </div>
+            <h3 class="stat-label">States & UTs Recorded</h3>
+            <p class="stat-detail">36 distinct states and union territories represented; 175 rows lack a state label (2.50%).</p>
+            <div class="stat-footer-badge">Top: Maharashtra (660)</div>
+          </div>
+
+          <!-- Stat 6: Missing Ratings Imputed -->
+          <div class="stat-card" data-stat="866">
+            <div class="stat-header">
+              <span class="stat-indicator blue"></span>
+              <span class="stat-context">Imputation (Q3)</span>
+            </div>
+            <div class="stat-value-wrap">
+              <span class="stat-number count-up" data-target="866">0</span>
+            </div>
+            <h3 class="stat-label">Ratings Imputed</h3>
+            <p class="stat-detail">866 missing ratings (12.37%) resolved to 0 missing using two-stage group medians.</p>
+            <div class="stat-footer-badge">Stage 1: 737 | Stage 2: 129</div>
+          </div>
+
+          <!-- Stat 7: State x Grade Groups -->
+          <div class="stat-card" data-stat="263">
+            <div class="stat-header">
+              <span class="stat-indicator purple"></span>
+              <span class="stat-context">Cross-tabulation (Q4)</span>
+            </div>
+            <div class="stat-value-wrap">
+              <span class="stat-number count-up" data-target="263">0</span>
+            </div>
+            <h3 class="stat-label">Observed (State, Grade) Pairs</h3>
+            <p class="stat-detail">Distinct pairs identified across the table. Highest count: Karnataka with A+ (120 colleges).</p>
+            <div class="stat-footer-badge">Max: Karnataka + A+ (120)</div>
+          </div>
+
+          <!-- Stat 8: Rating Score Range -->
+          <div class="stat-card" data-stat="2.64">
+            <div class="stat-header">
+              <span class="stat-indicator emerald"></span>
+              <span class="stat-context">Continuous Scale</span>
+            </div>
+            <div class="stat-value-wrap">
+              <span class="stat-number count-up" data-target="2.64" data-decimals="2">0</span>
+              <span class="stat-unit">/ 4.0</span>
+            </div>
+            <h3 class="stat-label">Observed Mean Rating</h3>
+            <p class="stat-detail">Observed ratings span 0.53 to 4.00 (median: 2.85). Imputed column mean adjusts to 2.56.</p>
+            <div class="stat-footer-badge">Observed Median: 2.85</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: THE FIVE QUESTIONS — MAJOR INTERACTIVE SECTION -->
+    <section class="section section-alt" id="questions">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Core Academic Inquiry</span>
+          <h2 class="section-title">The Five Assigned Questions</h2>
+          <p class="section-lead">
+            The heart of the EDAV assignment: five questions formulated under Bloom’s Revised Taxonomy, solved with step-by-step mathematical reasoning, pandas operations, and empirical observations.
+          </p>
+        </div>
+
+        <div class="questions-accordion">
+
+          <!-- QUESTION 01 -->
+          <article class="question-card active" id="q1-card">
+            <div class="question-header" role="button" tabindex="0" aria-expanded="true" aria-controls="q1-content">
+              <div class="q-meta">
+                <span class="q-number">01</span>
+                <span class="q-bloom-badge bloom-3">Bloom BL-3: Apply</span>
+              </div>
+              <div class="q-title-wrap">
+                <h3 class="q-title">Q1: Calculate percentage of accredited colleges</h3>
+                <p class="q-summary-preview">Computed exact proportion of accredited institutions: <strong>67.06%</strong> (4,694 of 7,000).</p>
+              </div>
+              <div class="q-action-group">
+                <span class="view-answer-btn">
+                  <span>Collapse Answer ↑</span>
+                </span>
+                <div class="q-expand-indicator" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="question-content" id="q1-content">
+              <div class="q-grid-layout">
+                <div class="q-details-col">
+                  <div class="q-block">
+                    <h4 class="q-block-title">Objective & Theory</h4>
+                    <p>
+                      Calculate what percentage of the 7,000 institutions are classified as <code>Accredited</code> within the categorical variable <code>Accreditation_Status</code>, while reporting the complete three-category distribution.
+                    </p>
+                  </div>
+
+                  <div class="q-block">
+                    <h4 class="q-block-title">Mathematical Formula</h4>
+                    <div class="math-box">
+                      <div class="math-display">
+                        $$ \text{Percentage of Accredited Colleges} = \left( \frac{n_{\text{accredited}}}{N} \right) \times 100 $$
+                      </div>
+                      <p class="math-legend">Where $n_{\text{accredited}} = 4,694$ (numerator), $N = 7,000$ (denominator). Result $= 67.0571\% \approx 67.06\%$.</p>
+                    </div>
+                  </div>
+
+                  <div class="q-block">
+                    <h4 class="q-block-title">Execution Code</h4>
+                    <pre class="code-block"><code>total_colleges = len(df)
+accredited_count = int((df["Accreditation_Status"] == "Accredited").sum())
+accredited_percentage = (accredited_count / total_colleges) * 100
+# Output: 67.06%</code></pre>
+                  </div>
+
+                  <div class="q-block">
+                    <h4 class="q-block-title">Summary Distribution Table</h4>
+                    <table class="compact-table">
+                      <thead>
+                        <tr>
+                          <th>Status Category</th>
+                          <th>Count ($n$)</th>
+                          <th>Percentage (%)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="highlight-row">
+                          <td><strong>Accredited</strong></td>
+                          <td><strong>4,694</strong></td>
+                          <td><strong>67.06%</strong></td>
+                        </tr>
+                        <tr>
+                          <td>Not Accredited</td>
+                          <td>1,566</td>
+                          <td>22.37%</td>
+                        </tr>
+                        <tr>
+                          <td>Under Review</td>
+                          <td>740</td>
+                          <td>10.57%</td>
+                        </tr>
+                        <tr class="total-row">
+                          <td><strong>Total</strong></td>
+                          <td><strong>7,000</strong></td>
+                          <td><strong>100.00%</strong></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="q-block">
+                    <h4 class="q-block-title">Academic Interpretation</h4>
+                    <p class="interpretation-text">
+                      <code>Accreditation_Status</code> is completely observed across all 7,000 rows with 0 missing values. Exactly 4,694 colleges (67.06%) are labelled Accredited, 1,566 (22.37%) Not Accredited, and 740 (10.57%) Under Review. These figures reflect properties of this synthetic dataset only.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="q-chart-col">
+                  <div class="q-chart-container" data-chart="q1">
+                    <div class="chart-header">
+                      <span class="chart-pill">Q1 Primary Visualization</span>
+                      <button class="btn-zoom-chart" data-img="assets/q1_status_distribution.png" data-title="Q1: Accreditation Status Counts & Percentages" aria-label="Enlarge Q1 Chart">
+                        <span>Enlarge 🔍</span>
+                      </button>
+                    </div>
+                    <img src="assets/q1_status_distribution.png" alt="Q1 Accreditation Status Distribution Bar Chart and Pie Chart" class="q-img" loading="lazy">
+                    <p class="chart-caption">
+                      <strong>Figure 1:</strong> Status counts on a uniform bar scale alongside proportional pie slice composition. Statuses strictly partition the 7,000 institutions.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- QUESTION 02 -->
+          <article class="question-card" id="q2-card">
+            <div class="question-header" role="button" tabindex="0" aria-expanded="false" aria-controls="q2-content">
+              <div class="q-meta">
+                <span class="q-number">02</span>
+                <span class="q-bloom-badge bloom-3">Bloom BL-3: Apply</span>
+              </div>
+              <div class="q-title-wrap">
+                <h3 class="q-title">Q2: Filter colleges by accreditation status and region</h3>
+                <p class="q-summary-preview">Boolean AND indexing extracted key regional subsets: South Accredited (<strong>1,619</strong>), North Non-Accredited (<strong>424</strong>), West Under Review (<strong>112</strong>).</p>
+              </div>
+              <div class="q-action-group">
+                <span class="view-answer-btn">
+                  <span>View Answer →</span>
+                </span>
+                <div class="q-expand-indicator" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="question-content" id="q2-content">
+              <div class="q-grid-layout full-width-layout">
+                <div class="q-details-col">
+                  <div class="q-block">
+                    <h4 class="q-block-title">Objective & Methodology</h4>
+                    <p>
+                      Generate filtered slices of the table matching specific values of <code>Accreditation_Status</code> <strong>AND</strong> <code>Region</code> using Boolean indexing without modifying the parent dataset.
+                    </p>
+                  </div>
+
+                  <div class="q-block">
+                    <h4 class="q-block-title">Boolean Indexing Logic</h4>
+                    <pre class="code-block"><code># Subsets created with bitwise logical AND (&)
+accredited_south = df[(df["Accreditation_Status"] == "Accredited") & (df["Region"] == "South")]
+not_accredited_north = df[(df["Accreditation_Status"] == "Not Accredited") & (df["Region"] == "North")]
+under_review_west = df[(df["Accreditation_Status"] == "Under Review") & (df["Region"] == "West")]</code></pre>
+                  </div>
+
+                  <div class="q-block">
+                    <h4 class="q-block-title">Status × Region Cross-Tabulation (All Observed Records)</h4>
+                    <p class="sub-text">Note: 176 records have a missing (NaN) Region and are excluded from region-specific filters.</p>
+                    <div class="table-responsive">
+                      <table class="compact-table">
+                        <thead>
+                          <tr>
+                            <th>Accreditation Status</th>
+                            <th>South</th>
+                            <th>North</th>
+                            <th>West</th>
+                            <th>East</th>
+                            <th>Central</th>
+                            <th>Northeast</th>
+                            <th>NaN (Missing)</th>
+                            <th>Total</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><strong>Accredited</strong></td>
+                            <td class="highlight-cell"><strong>1,619</strong></td>
+                            <td>1,174</td>
+                            <td>744</td>
+                            <td>540</td>
+                            <td>315</td>
+                            <td>184</td>
+                            <td>118</td>
+                            <td><strong>4,694</strong></td>
+                          </tr>
+                          <tr>
+                            <td><strong>Not Accredited</strong></td>
+                            <td>490</td>
+                            <td class="highlight-cell"><strong>424</strong></td>
+                            <td>215</td>
+                            <td>229</td>
+                            <td>106</td>
+                            <td>62</td>
+                            <td>40</td>
+                            <td><strong>1,566</strong></td>
+                          </tr>
+                          <tr>
+                            <td><strong>Under Review</strong></td>
+                            <td>237</td>
+                            <td>196</td>
+                            <td class="highlight-cell"><strong>112</strong></td>
+                            <td>88</td>
+                            <td>54</td>
+                            <td>35</td>
+                            <td>18</td>
+                            <td><strong>740</strong></td>
+                          </tr>
+                          <tr class="total-row">
+                            <td><strong>Total</strong></td>
+                            <td><strong>2,346</strong></td>
+                            <td><strong>1,794</strong></td>
+                            <td><strong>1,071</strong></td>
+                            <td><strong>857</strong></td>
+                            <td><strong>475</strong></td>
+                            <td><strong>281</strong></td>
+                            <td><strong>176</strong></td>
+                            <td><strong>7,000</strong></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <div class="q-block">
+                    <h4 class="q-block-title">Subsets Extracted & Key Observations</h4>
+                    <div class="subset-cards-grid">
+                      <div class="subset-card">
+                        <div class="subset-title">Accredited ∩ South</div>
+                        <div class="subset-val">1,619 Colleges</div>
+                        <p class="subset-note">Represents 34.49% of all accredited institutions and 69.01% of southern institutions.</p>
+                      </div>
+                      <div class="subset-card">
+                        <div class="subset-title">Not Accredited ∩ North</div>
+                        <div class="subset-val">424 Colleges</div>
+                        <p class="subset-note">Represents 27.08% of all unaccredited colleges and 23.63% of northern institutions.</p>
+                      </div>
+                      <div class="subset-card">
+                        <div class="subset-title">Under Review ∩ West</div>
+                        <div class="subset-val">112 Colleges</div>
+                        <p class="subset-note">Represents 15.14% of pending review records and 10.46% of western institutions.</p>
+                      </div>
+                    </div>
+                    <p class="interpretation-text mt-3">
+                      <strong>Handling Missing Values:</strong> 176 colleges lacking a <code>Region</code> label evaluate to <code>False</code> under <code>NaN == "Region"</code>. They are properly excluded from regional slices rather than misassigned.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- QUESTION 03 -->
+          <article class="question-card" id="q3-card">
+            <div class="question-header" role="button" tabindex="0" aria-expanded="false" aria-controls="q3-content">
+              <div class="q-meta">
+                <span class="q-number">03</span>
+                <span class="q-bloom-badge bloom-4">Bloom BL-4: Analyze</span>
+              </div>
+              <div class="q-title-wrap">
+                <h3 class="q-title">Q3: Fill missing accreditation rating data</h3>
+                <p class="q-summary-preview">Diagnosed 866 missing ratings (12.37%) and applied a principled <strong>two-stage group-wise median imputation</strong>.</p>
+              </div>
+              <div class="q-action-group">
+                <span class="view-answer-btn">
+                  <span>View Answer →</span>
+                </span>
+                <div class="q-expand-indicator" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="question-content" id="q3-content">
+              <div class="q-grid-layout">
+                <div class="q-details-col">
+                  <div class="q-block">
+                    <h4 class="q-block-title">Problem Diagnosis & Cleaning Theory</h4>
+                    <p>
+                      <code>Accreditation_Rating</code> had <strong>866 missing values (12.37%)</strong>. Observed ratings range from <strong>0.53 to 4.00</strong>, with an observed mean of <strong>2.6351</strong>, median of <strong>2.8500</strong>, and moderate left-skewness of <strong>-0.7544</strong>.
+                    </p>
+                    <div class="rejection-box">
+                      <div class="rej-item">
+                        <strong>❌ Why Zero-Fill was Rejected:</strong> The minimum observed rating is 0.53. Filling missing scores with 0 treats "unknown" as severe institutional failure and manufactures an artificial zero spike.
+                      </div>
+                      <div class="rej-item">
+                        <strong>❌ Why Listwise Deletion was Rejected:</strong> Dropping rows would permanently purge 866 colleges (12.37%), including 233 accredited colleges with complete geographic data.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="q-block">
+                    <h4 class="q-block-title">Mathematical Formulation (Sample Mean)</h4>
+                    <div class="math-box">
+                      <div class="math-display">
+                        $$ \bar{x} = \frac{\sum_{i=1}^{n} x_i}{n} $$
+                      </div>
+                      <p class="math-legend">Where $\bar{x} = 2.6351$ is the observed sample mean, $x_i$ represents each observed rating score, and $n = 6,134$ is the count of observed non-missing ratings.</p>
+                    </div>
+                  </div>
+
+                  <div class="q-block">
+                    <h4 class="q-block-title">Methodology: Two-Stage Group-Wise Median</h4>
+                    <ul class="method-steps-list">
+                      <li>
+                        <strong>Stage 1 (Grade Median):</strong> Ratings are tightly clustered by grade (A++ median = 3.75; D median = 1.07). Missing ratings with a known grade are filled with their respective grade median. This resolved <strong>737 missing values</strong>.
+                      </li>
+                      <li>
+                        <strong>Stage 2 (Status Fallback):</strong> 129 colleges lacked <em>both</em> rating and grade. For these, fallback medians were calculated across <code>Accreditation_Status</code> (Accredited: 3.03, Not Accredited: 1.34, Under Review: 2.72). This resolved the remaining <strong>129 values to 0 missing</strong>.
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div class="q-block">
+                    <h4 class="q-block-title">Before vs. After Comparison</h4>
+                    <table class="compact-table">
+                      <thead>
+                        <tr>
+                          <th>Stage</th>
+                          <th>Missing Count</th>
+                          <th>Missing %</th>
+                          <th>Mean Score</th>
+                          <th>Median Score</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Observed Only (Before)</td>
+                          <td>866</td>
+                          <td>12.37%</td>
+                          <td>2.6351</td>
+                          <td>2.8500</td>
+                        </tr>
+                        <tr class="highlight-row">
+                          <td><strong>After Two-Stage Imputation</strong></td>
+                          <td><strong>0</strong></td>
+                          <td><strong>0.00%</strong></td>
+                          <td><strong>2.5584</strong></td>
+                          <td><strong>2.7900</strong></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="q-block">
+                    <h4 class="q-block-title">Academic Caveat</h4>
+                    <p class="interpretation-text">
+                      <em>Imputed values are statistical estimates, not real-world measurements.</em> A college assigned 1.34 because it was unaccredited did not "earn" 1.34; it received the synthetic cohort median.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="q-chart-col">
+                  <div class="q-chart-container" data-chart="q3">
+                    <div class="chart-header">
+                      <span class="chart-pill">Q3 Primary Visualization</span>
+                      <button class="btn-zoom-chart" data-img="assets/q3_rating_imputation_comparison.png" data-title="Q3: Rating Distribution Before vs. After Imputation" aria-label="Enlarge Q3 Chart">
+                        <span>Enlarge 🔍</span>
+                      </button>
+                    </div>
+                    <img src="assets/q3_rating_imputation_comparison.png" alt="Q3 Accreditation Rating Histogram Comparison Before and After Imputation" class="q-img" loading="lazy">
+                    <p class="chart-caption">
+                      <strong>Figure 2:</strong> Side-by-side histogram showing observed distribution (blue) vs post-imputation complete distribution (green) with vertical mean and median markers.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- QUESTION 04 -->
+          <article class="question-card" id="q4-card">
+            <div class="question-header" role="button" tabindex="0" aria-expanded="false" aria-controls="q4-content">
+              <div class="q-meta">
+                <span class="q-number">04</span>
+                <span class="q-bloom-badge bloom-4">Bloom BL-4: Analyze</span>
+              </div>
+              <div class="q-title-wrap">
+                <h3 class="q-title">Q4: Group colleges by state and accreditation grade</h3>
+                <p class="q-summary-preview">Partitioned table by <code>(State, Accreditation_Grade)</code> generating <strong>263 observed combinations</strong> across the nation.</p>
+              </div>
+              <div class="q-action-group">
+                <span class="view-answer-btn">
+                  <span>View Answer →</span>
+                </span>
+                <div class="q-expand-indicator" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="question-content" id="q4-content">
+              <div class="q-grid-layout full-width-layout">
+                <div class="q-details-col">
+                  <div class="q-block">
+                    <h4 class="q-block-title">Theory & Mathematical Formulation</h4>
+                    <p>
+                      Grouping partitions the DataFrame into subsets sharing distinct values of state $s$ and grade $g$, and counts rows via <code>size()</code>:
+                    </p>
+                    <div class="math-box">
+                      <div class="math-display">
+                        $$ \operatorname{Count}(\text{State} = s, \, \text{Grade} = g) = \# \{ \text{colleges with State } s \text{ and Grade } g \} $$
+                      </div>
+                      <p class="math-legend">Where $s \in \{1, \dots, 36\}$ observed states and $g \in \{\text{A++}, \text{A+}, \text{A}, \text{B++}, \text{B+}, \text{B}, \text{C}, \text{D}\}$ quality grades.</p>
+                    </div>
+                    <p class="sub-text">
+                      Rows missing either State (175) or Grade (608) total 776 rows and are excluded from the default frequency groupby.
+                    </p>
+                  </div>
+
+                  <div class="q-block">
+                    <h4 class="q-block-title">Top 10 States × Accreditation Grade Matrix (Unstacked Pivot)</h4>
+                    <div class="table-responsive">
+                      <table class="compact-table">
+                        <thead>
+                          <tr>
+                            <th>State</th>
+                            <th>A++</th>
+                            <th>A+</th>
+                            <th>A</th>
+                            <th>B++</th>
+                            <th>B+</th>
+                            <th>B</th>
+                            <th>C</th>
+                            <th>D</th>
+                            <th>Total with Grade</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><strong>Maharashtra</strong></td>
+                            <td>74</td>
+                            <td>111</td>
+                            <td class="highlight-cell"><strong>114</strong></td>
+                            <td>96</td>
+                            <td>63</td>
+                            <td>35</td>
+                            <td>44</td>
+                            <td>66</td>
+                            <td><strong>603</strong></td>
+                          </tr>
+                          <tr>
+                            <td><strong>Uttar Pradesh</strong></td>
+                            <td>20</td>
+                            <td>52</td>
+                            <td>90</td>
+                            <td>80</td>
+                            <td>92</td>
+                            <td>70</td>
+                            <td class="highlight-cell"><strong>98</strong></td>
+                            <td class="highlight-cell"><strong>94</strong></td>
+                            <td><strong>596</strong></td>
+                          </tr>
+                          <tr>
+                            <td><strong>Karnataka</strong></td>
+                            <td>73</td>
+                            <td class="highlight-cell"><strong>120</strong></td>
+                            <td class="highlight-cell"><strong>116</strong></td>
+                            <td>80</td>
+                            <td>45</td>
+                            <td>35</td>
+                            <td>49</td>
+                            <td>58</td>
+                            <td><strong>576</strong></td>
+                          </tr>
+                          <tr>
+                            <td><strong>Tamil Nadu</strong></td>
+                            <td>72</td>
+                            <td class="highlight-cell"><strong>106</strong></td>
+                            <td>80</td>
+                            <td>91</td>
+                            <td>42</td>
+                            <td>34</td>
+                            <td>51</td>
+                            <td>57</td>
+                            <td><strong>533</strong></td>
+                          </tr>
+                          <tr>
+                            <td><strong>Andhra Pradesh</strong></td>
+                            <td>18</td>
+                            <td>57</td>
+                            <td>58</td>
+                            <td>56</td>
+                            <td>49</td>
+                            <td>51</td>
+                            <td>42</td>
+                            <td>36</td>
+                            <td><strong>367</strong></td>
+                          </tr>
+                          <tr>
+                            <td><strong>Telangana</strong></td>
+                            <td>33</td>
+                            <td>49</td>
+                            <td>62</td>
+                            <td>59</td>
+                            <td>54</td>
+                            <td>26</td>
+                            <td>35</td>
+                            <td>48</td>
+                            <td><strong>366</strong></td>
+                          </tr>
+                          <tr>
+                            <td><strong>Rajasthan</strong></td>
+                            <td>17</td>
+                            <td>46</td>
+                            <td>53</td>
+                            <td>52</td>
+                            <td>51</td>
+                            <td>28</td>
+                            <td>40</td>
+                            <td>38</td>
+                            <td><strong>325</strong></td>
+                          </tr>
+                          <tr>
+                            <td><strong>Gujarat</strong></td>
+                            <td>31</td>
+                            <td>58</td>
+                            <td>69</td>
+                            <td>48</td>
+                            <td>28</td>
+                            <td>27</td>
+                            <td>36</td>
+                            <td>37</td>
+                            <td><strong>334</strong></td>
+                          </tr>
+                          <tr>
+                            <td><strong>Madhya Pradesh</strong></td>
+                            <td>20</td>
+                            <td>35</td>
+                            <td>40</td>
+                            <td>51</td>
+                            <td>48</td>
+                            <td>42</td>
+                            <td>47</td>
+                            <td>41</td>
+                            <td><strong>324</strong></td>
+                          </tr>
+                          <tr>
+                            <td><strong>West Bengal</strong></td>
+                            <td>17</td>
+                            <td>29</td>
+                            <td>35</td>
+                            <td>39</td>
+                            <td>28</td>
+                            <td>31</td>
+                            <td>37</td>
+                            <td>39</td>
+                            <td><strong>255</strong></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <div class="q-block">
+                    <h4 class="q-block-title">Key Observations</h4>
+                    <p class="interpretation-text">
+                      High volume states (Maharashtra, UP, Karnataka, Tamil Nadu) naturally register large counts across all grades due to larger base representation in the dataset. Karnataka leads in A+ (120) and A (116); Maharashtra leads in A (114) and A++ (74); Uttar Pradesh has the largest frequencies in C (98) and D (94). These reflect frequency distributions in this synthetic table, not educational quality rankings.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- QUESTION 05 -->
+          <article class="question-card" id="q5-card">
+            <div class="question-header" role="button" tabindex="0" aria-expanded="false" aria-controls="q5-content">
+              <div class="q-meta">
+                <span class="q-number">05</span>
+                <span class="q-bloom-badge bloom-5">Bloom BL-5: Evaluate</span>
+              </div>
+              <div class="q-title-wrap">
+                <h3 class="q-title">Q5: Visualize accreditation distribution by state</h3>
+                <p class="q-summary-preview">Synthesized state-level distribution across <strong>three distinct visualization paradigms</strong>: sorted horizontal bar, stacked status bar, and grade heatmap.</p>
+              </div>
+              <div class="q-action-group">
+                <span class="view-answer-btn">
+                  <span>View Answer →</span>
+                </span>
+                <div class="q-expand-indicator" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="question-content" id="q5-content">
+              <div class="q-grid-layout">
+                <div class="q-details-col">
+                  <div class="q-block">
+                    <h4 class="q-block-title">Visualization Theory & Strategy</h4>
+                    <p>
+                      Scanning a 36-state frequency table is cognitively demanding. Visualization maps categorical counts to spatial position and bar length, allowing instantaneous comparison without distorting underlying numbers.
+                    </p>
+                    <p>
+                      <strong>Data Preparation:</strong> 175 rows lacking a state label were excluded from plotting, leaving <strong>6,825 colleges</strong> across 36 states/UTs.
+                    </p>
+                  </div>
+
+                  <div class="q-block">
+                    <h4 class="q-block-title">Three Purpose-Built Visualizations</h4>
+                    <div class="vis-purpose-list">
+                      <div class="vis-purpose-item">
+                        <span class="vis-num">1</span>
+                        <div>
+                          <strong>Horizontal Bar Chart:</strong> Ranks all 36 states/UTs by count of <em>Accredited</em> colleges. Horizontal orientation ensures all 36 state names remain legible without label overlap.
+                        </div>
+                      </div>
+                      <div class="vis-purpose-item">
+                        <span class="vis-num">2</span>
+                        <div>
+                          <strong>Stacked Status Bar Chart:</strong> Shows composition of Accredited, Not Accredited, and Under Review for the top 15 states, contextualizing total volume against proportions.
+                        </div>
+                      </div>
+                      <div class="vis-purpose-item">
+                        <span class="vis-num">3</span>
+                        <div>
+                          <strong>State × Grade Heatmap:</strong> Translates Q4's cross-tabulation into a 2D intensity grid for the top 12 states across all 8 grades (A++ to D).
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="q-block">
+                    <h4 class="q-block-title">Top 10 Accredited Counts by State</h4>
+                    <table class="compact-table">
+                      <thead>
+                        <tr>
+                          <th>Rank</th>
+                          <th>State / Union Territory</th>
+                          <th>Accredited Colleges Count</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>1</td><td>Maharashtra</td><td><strong>467</strong></td></tr>
+                        <tr><td>2</td><td>Karnataka</td><td><strong>435</strong></td></tr>
+                        <tr><td>3</td><td>Tamil Nadu</td><td><strong>407</strong></td></tr>
+                        <tr><td>4</td><td>Uttar Pradesh</td><td><strong>395</strong></td></tr>
+                        <tr><td>5</td><td>Andhra Pradesh</td><td><strong>281</strong></td></tr>
+                        <tr><td>6</td><td>Telangana</td><td><strong>267</strong></td></tr>
+                        <tr><td>7</td><td>Rajasthan</td><td><strong>242</strong></td></tr>
+                        <tr><td>8</td><td>Gujarat</td><td><strong>236</strong></td></tr>
+                        <tr><td>9</td><td>Madhya Pradesh</td><td><strong>233</strong></td></tr>
+                        <tr><td>10</td><td>Kerala</td><td><strong>200</strong></td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="q-chart-col">
+                  <!-- Chart 1 of Q5 -->
+                  <div class="q-chart-container mb-3" data-chart="q5_bar">
+                    <div class="chart-header">
+                      <span class="chart-pill">Q5 Chart 1: All 36 States</span>
+                      <button class="btn-zoom-chart" data-img="assets/q5_accredited_colleges_by_state.png" data-title="Q5 Chart 1: Number of Accredited Colleges by State (All 36 States/UTs)" aria-label="Enlarge Q5 Bar Chart">
+                        <span>Enlarge 🔍</span>
+                      </button>
+                    </div>
+                    <img src="assets/q5_accredited_colleges_by_state.png" alt="Horizontal bar chart of accredited colleges across all 36 states" class="q-img" loading="lazy">
+                    <p class="chart-caption">
+                      <strong>Figure 3:</strong> Horizontal bar chart of accredited colleges across all 36 states and union territories.
+                    </p>
+                  </div>
+
+                  <!-- Chart 2 of Q5 -->
+                  <div class="q-chart-container mb-3" data-chart="q5_stacked">
+                    <div class="chart-header">
+                      <span class="chart-pill">Q5 Chart 2: Top 15 States</span>
+                      <button class="btn-zoom-chart" data-img="assets/q5_status_composition_top15_states.png" data-title="Q5 Chart 2: Accreditation Status Composition for Top 15 States" aria-label="Enlarge Q5 Stacked Chart">
+                        <span>Enlarge 🔍</span>
+                      </button>
+                    </div>
+                    <img src="assets/q5_status_composition_top15_states.png" alt="Stacked bar chart of status composition for top 15 states" class="q-img" loading="lazy">
+                    <p class="chart-caption">
+                      <strong>Figure 4:</strong> Stacked composition for top 15 states confirming Accredited dominance across all volume tiers.
+                    </p>
+                  </div>
+
+                  <!-- Chart 3 of Q5 -->
+                  <div class="q-chart-container" data-chart="q5_heatmap">
+                    <div class="chart-header">
+                      <span class="chart-pill">Q5 Chart 3: Top 12 States Heatmap</span>
+                      <button class="btn-zoom-chart" data-img="assets/q5_state_grade_heatmap_top12.png" data-title="Q5 Chart 3: State × Grade Frequency Heatmap (Top 12 States)" aria-label="Enlarge Q5 Heatmap">
+                        <span>Enlarge 🔍</span>
+                      </button>
+                    </div>
+                    <img src="assets/q5_state_grade_heatmap_top12.png" alt="State by Grade Heatmap Matrix for Top 12 States" class="q-img" loading="lazy">
+                    <p class="chart-caption">
+                      <strong>Figure 5:</strong> State × Grade intensity heatmap for the top 12 states across all 8 grades, visually expressing Q4's cross-tabulation.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: VISUALIZATIONS SHOWCASE & LIGHTBOX -->
+    <section class="section" id="visualizations">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Analytical Graphics</span>
+          <h2 class="section-title">Visualizations Showcase</h2>
+          <p class="section-lead">
+            High-fidelity figures generated directly in the Colab notebook using Matplotlib and Seaborn. Click any visualization to open an interactive high-resolution lightbox modal.
+          </p>
+        </div>
+
+        <div class="vis-gallery-grid">
+
+          <!-- Vis Card 1: Q1 Status Distribution -->
+          <div class="vis-card" data-img="assets/q1_status_distribution.png" data-title="Accreditation Status Counts & Percentages (Q1)" data-desc="Bar chart comparing frequencies on a common scale alongside a pie chart illustrating the complete partition of the 7,000 institutions across Accredited (67.06%), Not Accredited (22.37%), and Under Review (10.57%).">
+            <div class="vis-img-wrapper">
+              <img src="assets/q1_status_distribution.png" alt="Accreditation Status Distribution Bar and Pie Charts" loading="lazy">
+              <div class="vis-overlay">
+                <span class="vis-view-badge">Click to enlarge 🔍</span>
+              </div>
+            </div>
+            <div class="vis-info">
+              <div class="vis-card-meta">
+                <span class="badge badge-primary">Q1 Analysis</span>
+                <span class="vis-format">Matplotlib Subplots (1x2)</span>
+              </div>
+              <h3 class="vis-card-title">Accreditation Status Distribution</h3>
+              <p class="vis-card-desc">
+                Demonstrates that 67.06% of institutions are accredited, with 0 missing values across all 7,000 records.
+              </p>
+            </div>
+          </div>
+
+          <!-- Vis Card 2: Q3 Rating Imputation -->
+          <div class="vis-card" data-img="assets/q3_rating_imputation_comparison.png" data-title="Accreditation Rating Distribution: Before vs. After Imputation (Q3)" data-desc="Side-by-side histogram comparing observed ratings (blue, 6,134 non-null values) against the fully imputed column (green, 7,000 values). Shows dashed median and dotted mean lines before (mean: 2.64, median: 2.85) and after (mean: 2.56, median: 2.79) two-stage group-wise median imputation.">
+            <div class="vis-img-wrapper">
+              <img src="assets/q3_rating_imputation_comparison.png" alt="Rating Distribution Before and After Imputation" loading="lazy">
+              <div class="vis-overlay">
+                <span class="vis-view-badge">Click to enlarge 🔍</span>
+              </div>
+            </div>
+            <div class="vis-info">
+              <div class="vis-card-meta">
+                <span class="badge badge-primary">Q3 Imputation</span>
+                <span class="vis-format">Histograms (Share Y-axis)</span>
+              </div>
+              <h3 class="vis-card-title">Rating Distribution Before vs. After Imputation</h3>
+              <p class="vis-card-desc">
+                Illustrates how 866 missing ratings were filled via grade and status medians without introducing artificial zero spikes.
+              </p>
+            </div>
+          </div>
+
+          <!-- Vis Card 3: Q5 Bar Chart -->
+          <div class="vis-card" data-img="assets/q5_accredited_colleges_by_state.png" data-title="Number of Accredited Colleges by State (Q5 Chart 1)" data-desc="Horizontal bar chart showing counts of accredited colleges across all 36 observed states and union territories. Maharashtra (467), Karnataka (435), Tamil Nadu (407), and Uttar Pradesh (395) record the highest counts. 175 rows lacking state are excluded.">
+            <div class="vis-img-wrapper">
+              <img src="assets/q5_accredited_colleges_by_state.png" alt="Accredited Colleges by State Horizontal Bar Chart" loading="lazy">
+              <div class="vis-overlay">
+                <span class="vis-view-badge">Click to enlarge 🔍</span>
+              </div>
+            </div>
+            <div class="vis-info">
+              <div class="vis-card-meta">
+                <span class="badge badge-primary">Q5 Chart 1</span>
+                <span class="vis-format">Seaborn Barplot (Horizontal)</span>
+              </div>
+              <h3 class="vis-card-title">Accredited Colleges Across 36 States</h3>
+              <p class="vis-card-desc">
+                Full geographic overview ranking all 36 Indian states and union territories by accredited college frequency.
+              </p>
+            </div>
+          </div>
+
+          <!-- Vis Card 4: Q5 Stacked Bar Chart -->
+          <div class="vis-card" data-img="assets/q5_status_composition_top15_states.png" data-title="Accreditation Status by State — Top 15 States (Q5 Chart 2)" data-desc="Stacked bar chart of status composition across the 15 states with the highest number of colleges in the table. Demonstrates that the Accredited slice forms the largest segment in each major state, matching the national 67.06% baseline while revealing state-specific variances in unaccredited proportions.">
+            <div class="vis-img-wrapper">
+              <img src="assets/q5_status_composition_top15_states.png" alt="Accreditation Status by State Stacked Bar Chart" loading="lazy">
+              <div class="vis-overlay">
+                <span class="vis-view-badge">Click to enlarge 🔍</span>
+              </div>
+            </div>
+            <div class="vis-info">
+              <div class="vis-card-meta">
+                <span class="badge badge-primary">Q5 Chart 2</span>
+                <span class="vis-format">Pandas Crosstab Stacked Bar</span>
+              </div>
+              <h3 class="vis-card-title">Status Composition for Top 15 States</h3>
+              <p class="vis-card-desc">
+                Reveals categorical breakdown across the 15 largest state cohorts, showing Accredited, Not Accredited, and Under Review.
+              </p>
+            </div>
+          </div>
+
+          <!-- Vis Card 5: Q5 Heatmap -->
+          <div class="vis-card vis-card-featured" data-img="assets/q5_state_grade_heatmap_top12.png" data-title="State × Accreditation Grade Heatmap (Q5 Chart 3)" data-desc="Two-dimensional frequency heatmap mapping the 12 states with the most institutions across all 8 accreditation grades (A++, A+, A, B++, B+, B, C, D). Visualizes Q4's cross-tabulation count function, highlighting grade clustering in states like Karnataka, Maharashtra, and Uttar Pradesh.">
+            <div class="vis-img-wrapper">
+              <img src="assets/q5_state_grade_heatmap_top12.png" alt="State by Grade Heatmap Matrix" loading="lazy">
+              <div class="vis-overlay">
+                <span class="vis-view-badge">Click to enlarge 🔍</span>
+              </div>
+            </div>
+            <div class="vis-info">
+              <div class="vis-card-meta">
+                <span class="badge badge-primary">Q5 Chart 3</span>
+                <span class="vis-format">Seaborn Annotated Heatmap</span>
+              </div>
+              <h3 class="vis-card-title">State × Grade Frequency Heatmap</h3>
+              <p class="vis-card-desc">
+                2D heat matrix linking State and Accreditation Grade counts for the 12 highest-volume states with annotated frequencies.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: METHODOLOGY TIMELINE -->
+    <section class="section section-alt" id="methodology">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Reproducible Workflow</span>
+          <h2 class="section-title">Analytical Methodology</h2>
+          <p class="section-lead">
+            The end-to-end data lifecycle applied throughout the EDAV project. Click each stage to inspect its analytical purpose, Python operations, and dataset outcomes.
+          </p>
+        </div>
+
+        <div class="methodology-container">
+          <!-- Timeline Steps Navigator -->
+          <div class="timeline-nav" role="tablist" aria-label="Methodology Steps">
+            <button class="timeline-step-btn active" role="tab" aria-selected="true" data-step="0">
+              <span class="step-num">01</span>
+              <span class="step-title">Load Dataset</span>
+            </button>
+            <button class="timeline-step-btn" role="tab" aria-selected="false" data-step="1">
+              <span class="step-num">02</span>
+              <span class="step-title">Initial Inspection</span>
+            </button>
+            <button class="timeline-step-btn" role="tab" aria-selected="false" data-step="2">
+              <span class="step-num">03</span>
+              <span class="step-title">Data Quality Audit</span>
+            </button>
+            <button class="timeline-step-btn" role="tab" aria-selected="false" data-step="3">
+              <span class="step-num">04</span>
+              <span class="step-title">Proportion (Q1)</span>
+            </button>
+            <button class="timeline-step-btn" role="tab" aria-selected="false" data-step="4">
+              <span class="step-num">05</span>
+              <span class="step-title">Filtering (Q2)</span>
+            </button>
+            <button class="timeline-step-btn" role="tab" aria-selected="false" data-step="5">
+              <span class="step-num">06</span>
+              <span class="step-title">Imputation (Q3)</span>
+            </button>
+            <button class="timeline-step-btn" role="tab" aria-selected="false" data-step="6">
+              <span class="step-num">07</span>
+              <span class="step-title">Grouping (Q4)</span>
+            </button>
+            <button class="timeline-step-btn" role="tab" aria-selected="false" data-step="7">
+              <span class="step-num">08</span>
+              <span class="step-title">Visualization (Q5)</span>
+            </button>
+          </div>
+
+          <!-- Timeline Active Content Display -->
+          <div class="timeline-detail-box" id="timelineDetail">
+            <div class="detail-header">
+              <div class="detail-meta">
+                <span class="badge badge-primary" id="detailStepBadge">Step 01 of 08</span>
+                <span class="detail-step-name" id="detailStepName">Load Dataset</span>
+              </div>
+              <span class="detail-op" id="detailOp">pd.read_csv()</span>
+            </div>
+            <div class="detail-grid">
+              <div class="detail-col">
+                <h4 class="detail-subtitle">Methodological Purpose</h4>
+                <p id="detailPurpose">
+                  Read <code>college_accreditation_synthetic.csv</code> into an in-memory pandas DataFrame. Configure pandas display parameters to prevent column truncation and establish seaborn visualization style.
+                </p>
+                <h4 class="detail-subtitle mt-3">Dataset Impact</h4>
+                <p id="detailImpact">
+                  Constructs the primary working DataFrame <code>df</code> with shape (7000, 9). Memory footprint confirmed at 492.3 KB.
+                </p>
+              </div>
+              <div class="detail-col">
+                <h4 class="detail-subtitle">Code Implementation</h4>
+                <pre class="code-block"><code id="detailCode">df = pd.read_csv("college_accreditation_synthetic.csv")
+print("Dimensions:", df.shape) # (7000, 9)</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: KEY FINDINGS -->
+    <section class="section" id="findings">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Analytical Conclusions</span>
+          <h2 class="section-title">Key Empirical Findings</h2>
+          <p class="section-lead">
+            The core analytical conclusions synthesized directly from Section 11 of the project notebook. No speculative or causal claims are made beyond the dataset.
+          </p>
+        </div>
+
+        <div class="findings-grid">
+          <!-- Finding 1 -->
+          <div class="finding-card">
+            <div class="finding-header">
+              <span class="finding-badge">Finding 01</span>
+              <span class="finding-icon emerald">✓</span>
+            </div>
+            <h3 class="finding-title">National Accreditation Share</h3>
+            <p class="finding-body">
+              Of <strong>7,000 colleges</strong>, exactly <strong>4,694 are Accredited (67.06%)</strong>, <strong>1,566 are Not Accredited (22.37%)</strong>, and <strong>740 are Under Review (10.57%)</strong>. The status variable is 100% complete with zero missing values.
+            </p>
+            <div class="finding-footer">
+              <span>Denominator: Complete N = 7,000</span>
+            </div>
+          </div>
+
+          <!-- Finding 2 -->
+          <div class="finding-card">
+            <div class="finding-header">
+              <span class="finding-badge">Finding 02</span>
+              <span class="finding-icon blue">⚡</span>
+            </div>
+            <h3 class="finding-title">Regional Subsets & Filtering Integrity</h3>
+            <p class="finding-body">
+              Multi-criteria Boolean AND filtering successfully extracted distinct regional subsets: <strong>1,619 Accredited colleges in the South</strong>, <strong>424 Not Accredited colleges in the North</strong>, and <strong>112 Under Review colleges in the West</strong>. Rows missing Region (176) were correctly excluded from named filters.
+            </p>
+            <div class="finding-footer">
+              <span>Boolean AND Logic without Data Mutation</span>
+            </div>
+          </div>
+
+          <!-- Finding 3 -->
+          <div class="finding-card">
+            <div class="finding-header">
+              <span class="finding-badge">Finding 03</span>
+              <span class="finding-icon amber">⚙</span>
+            </div>
+            <h3 class="finding-title">Group-Wise Imputation Effectiveness</h3>
+            <p class="finding-body">
+              <strong>866 missing ratings (12.37%)</strong> were filled using a principled two-stage group-wise median (Grade median, then Status median fallback). Column mean shifted moderately from <strong>2.6351 to 2.5584</strong> and median from <strong>2.8500 to 2.7900</strong> without introducing artificial zero distortions.
+            </p>
+            <div class="finding-footer">
+              <span>100% Complete post-imputation (0 missing)</span>
+            </div>
+          </div>
+
+          <!-- Finding 4 -->
+          <div class="finding-card">
+            <div class="finding-header">
+              <span class="finding-badge">Finding 04</span>
+              <span class="finding-icon purple">📊</span>
+            </div>
+            <h3 class="finding-title">Two-Way State × Grade Structure</h3>
+            <p class="finding-body">
+              Grouping across <code>(State, Accreditation_Grade)</code> yielded <strong>263 observed groups</strong>. High frequencies concentrated in populous state cohorts: Karnataka led A+ (120) and A (116); Maharashtra led A (114) and A++ (74); Uttar Pradesh had highest counts in C (98) and D (94).
+            </p>
+            <div class="finding-footer">
+              <span>Frequency Description, Not Institution Ranking</span>
+            </div>
+          </div>
+
+          <!-- Finding 5 -->
+          <div class="finding-card">
+            <div class="finding-header">
+              <span class="finding-badge">Finding 05</span>
+              <span class="finding-icon cyan">🗺</span>
+            </div>
+            <h3 class="finding-title">Geographic Visualization Synthesis</h3>
+            <p class="finding-body">
+              State-wise distribution visual analysis proved that high accredited counts are strongly correlated with total state record counts in the CSV. Stacked bar charts confirmed Accredited dominance across all top 15 states, while the heatmap made multi-grade concentrations readable.
+            </p>
+            <div class="finding-footer">
+              <span>3 Visualizations (Bar, Stacked, Heatmap)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Academic Limitations Section -->
+        <div class="limitations-container mt-4">
+          <div class="limitations-header">
+            <div class="lim-icon" aria-hidden="true">🛡️</div>
+            <div>
+              <h3 class="lim-title">Academic Limitations & Analytical Boundaries</h3>
+              <p class="lim-subtitle">Documented directly from Section 12 of the EDAV project notebook</p>
+            </div>
+          </div>
+          <div class="limitations-grid">
+            <div class="lim-item">
+              <span class="lim-dot"></span>
+              <p><strong>Synthetic Nature:</strong> The dataset is synthetically generated and intended strictly for academic EDAV demonstration.</p>
+            </div>
+            <div class="lim-item">
+              <span class="lim-dot"></span>
+              <p><strong>No Official Value:</strong> Must not be interpreted as official NAAC, UGC, or Government of India statistics.</p>
+            </div>
+            <div class="lim-item">
+              <span class="lim-dot"></span>
+              <p><strong>Non-Representative Distributions:</strong> Synthetic distributions do not represent real-world Indian higher education health.</p>
+            </div>
+            <div class="lim-item">
+              <span class="lim-dot"></span>
+              <p><strong>Imputation as Estimation:</strong> Imputed ratings are statistical approximations, not newly measured quality ratings.</p>
+            </div>
+            <div class="lim-item">
+              <span class="lim-dot"></span>
+              <p><strong>Descriptive, Not Causal:</strong> EDA describes patterns and structural frequencies but does not establish causality.</p>
+            </div>
+            <div class="lim-item">
+              <span class="lim-dot"></span>
+              <p><strong>File-Dependent Results:</strong> Findings depend strictly on the supplied table schema and category labels.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 9: PROJECT RESOURCES -->
+    <section class="section section-alt" id="resources">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Artifacts & Access</span>
+          <h2 class="section-title">Project Resources</h2>
+          <p class="section-lead">
+            Access the primary interactive Google Colab notebook, inspect the dataset properties, and review academic references.
+          </p>
+        </div>
+
+        <div class="resources-grid">
+          <!-- Primary Colab Resource Card -->
+          <div class="resource-card primary-resource-card">
+            <div class="res-badge">Primary Project Notebook</div>
+            <div class="res-icon colab-brand-icon">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+              </svg>
+            </div>
+            <h3 class="res-title">Interactive Google Colab Notebook</h3>
+            <p class="res-desc">
+              The primary completed EDAV project notebook containing all 65 cells: data loading, exploratory checks, the five assigned questions, complete formulas, Matplotlib/Seaborn code, and analytical findings.
+            </p>
+            <div class="res-actions">
+              <a href="https://colab.research.google.com/drive/1RPYyL-o5527WvpNsAxxu_zB49jQm65TN?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg res-btn">
+                <span>Open Project in Google Colab ↗</span>
+              </a>
+            </div>
+            <div class="res-footer-note">
+              <span>Verified Google Colab Link • Read-Only External Access</span>
+            </div>
+          </div>
+
+          <!-- Dataset Specs Card -->
+          <div class="resource-card">
+            <div class="res-icon blue-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+            <h3 class="res-title">Dataset Specification</h3>
+            <div class="res-specs-list">
+              <div class="spec-row">
+                <span class="spec-name">File Name</span>
+                <span class="spec-val">college_accreditation_synthetic.csv</span>
+              </div>
+              <div class="spec-row">
+                <span class="spec-name">File Size</span>
+                <span class="spec-val">663.9 KB (Disk) / 492.3 KB (RAM)</span>
+              </div>
+              <div class="spec-row">
+                <span class="spec-name">Rows × Columns</span>
+                <span class="spec-val">7,000 Rows × 9 Attributes</span>
+              </div>
+              <div class="spec-row">
+                <span class="spec-name">Data Type</span>
+                <span class="spec-val">Synthetic / Academic Demonstration</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Academic References Card -->
+          <div class="resource-card">
+            <div class="res-icon purple-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+            </div>
+            <h3 class="res-title">Documented References</h3>
+            <ul class="references-list">
+              <li>Python Software Foundation. <em>Python 3 Documentation</em>.</li>
+              <li>pandas development team. <em>pandas Documentation</em>.</li>
+              <li>NumPy project. <em>NumPy Scientific Computing Docs</em>.</li>
+              <li>Matplotlib & seaborn development teams. <em>Data Visualization Libraries</em>.</li>
+              <li>W. McKinney. <em>Python for Data Analysis</em> (O’Reilly Media).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- LIGHTBOX MODAL FOR CHARTS -->
+  <div id="chartModal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-tag">Figure Inspection</span>
+          <h3 class="modal-title" id="modalTitle">Visualization Preview</h3>
+        </div>
+        <button id="modalCloseBtn" class="modal-close-btn" aria-label="Close visualization modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-img-container">
+          <img id="modalImg" src="" alt="Enlarged Chart Visualization" class="modal-img">
+        </div>
+        <div class="modal-caption-box">
+          <p id="modalDesc" class="modal-caption-text"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BACK TO TOP BUTTON -->
+  <button id="backToTop" class="back-to-top" aria-label="Scroll back to top" title="Back to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+  </button>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span class="footer-title">College Accreditation & Quality Analysis</span>
+          </div>
+          <p class="footer-desc">
+            <strong>Evaluate Accreditation Statuses and Quality Ratings of Colleges Across India (Using Synthetic Data — Not Official Data)</strong><br>
+            An interactive presentation layer of the accompanying academic Exploratory Data Analysis and Visualization project. Developed strictly using pure HTML, CSS, and Vanilla JavaScript.
+          </p>
+        </div>
+
+        <div class="footer-links-group">
+          <h4 class="footer-heading">Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#disclaimer">Disclaimer</a></li>
+            <li><a href="#stats">Key Stats</a></li>
+            <li><a href="#questions">Five Questions</a></li>
+            <li><a href="#visualizations">Visualizations</a></li>
+            <li><a href="#methodology">Methodology</a></li>
+            <li><a href="#findings">Findings</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-group">
+          <h4 class="footer-heading">Project Links</h4>
+          <ul class="footer-links">
+            <li>
+              <a href="https://colab.research.google.com/drive/1RPYyL-o5527WvpNsAxxu_zB49jQm65TN?usp=sharing" target="_blank" rel="noopener noreferrer" class="footer-colab-link">
+                Open in Google Colab ↗
+              </a>
+            </li>
+            <li><a href="#disclaimer">Data Disclaimer</a></li>
+            <li><a href="#resources">Data Catalog</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">
+          Academic EDAV Portfolio Presentation Layer. All analysis, calculations, and visualizations faithfully represent the underlying project notebook.
+        </p>
+        <p class="footer-disclaimer-note">
+          ⚠️ Synthetic Dataset: Prepared for academic demonstration only. Not official NAAC or Government of India accreditation data.
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
